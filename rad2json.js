@@ -6,15 +6,26 @@ function rad_parser(event) {
   const input = event.target;
 
   if ('files' in input && input.files.length > 0) {
-    let file = input.files[0];
-    read_file_content(file).then(content => {
-      // Return JSON object
-      let data = rad_to_json(content);
-      // console.log('returning JSON objects.');
-      place_file_content(data);
-    }).catch(error => console.log(error))
-  }
+    let promises = []
 
+    for (var count = 0; count < input.files.length; count++) {
+      // collect all file contents as Promises
+      promises.push(read_file_content(input.files[count]))
+    }
+
+    Promise.all(promises).then(content => {
+        // join all files together as a single string
+        // performance-wise it should be fine: https://stackoverflow.com/a/4292753/4394669
+        let raw_data = content.join("\n");
+        // Return JSON objects
+        let data = rad_to_json(raw_data);
+        // expose data globally
+        window.rad_data = data;
+        // console.log('returning JSON objects.');
+        place_file_content(data);
+      }).catch(error => console.log(error))
+
+  }
 }
 
 function read_file_content(file) {
@@ -44,7 +55,8 @@ function rad_object_to_json(rad_text){
   const type = data[1];
   if (!type) return;
   if (type != 'polygon') {
-    console.log( rad_text  + ' is not currently supported!');
+    // this is a generic method that returns the data as values for each line
+    return parse_base(data);
   } else {
     // for now we only support polygons
     return parse_polygon(data);
@@ -68,6 +80,32 @@ function parse_polygon(data) {
     'vertices': vertices
   };
   return polygon;
+}
+
+function parse_base(data) {
+  /* convert a radiance primitive line to a JSON object */
+  // find number of items in each line
+  const base_data = data.slice(3);
+
+  const count_1 = parseInt(base_data[0]);
+  const count_2 = parseInt(base_data[count_1 + 1]);
+  const count_3 = parseInt(base_data[count_1 + count_2 + 2]);
+
+  const l1 = (count_1 == 0) ? [] : base_data.slice(1, count_1 + 1);
+  const l2 = (count_2 == 0) ? [] : base_data.slice(count_1 + 2, count_1 + count_2 + 2);
+  const l3 = (count_3 == 0) ? [] : base_data.slice(count_1 + count_2 + 3,
+    count_1 + count_2 + count_3 + 3);
+
+  const values = {0: l1, 1: l2, 2: l3}
+
+  const rad_object = {
+    'modifier': data[0],
+    'type': data[1],
+    'name': data[2],
+    'values': values
+  };
+
+  return rad_object;
 }
 
 function place_file_content(data) {
