@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <style>
+    textarea {
+      width: 900px;
+      height: 500px;
+    }
+  </style>
+  <body>
+
+    <div>
+      <label for="input-file">Specify a rad file </label>
+      <input type="file" id="input-file" >
+    </div>
+    <br />
+
+    <textarea id="content-target"></textarea>
+
+    <script type="module">
+      import {rad_parser} from './rad2json.js'
+      // bind input button to rad_parser
+      document.getElementById('input-file').addEventListener('change', rad_parser);
+    </script>
+
+  </body>
+</html>
