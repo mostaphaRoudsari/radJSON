@@ -1,3 +1,8 @@
+function create_xyz(xyz){
+
+  return  {'x': xyz[0], 'y': xyz[1], 'z': xyz[2]};
+
+}
 
 export function parse_polygon(data) {
   /* convert a polygon line to a JSON object */
@@ -5,15 +10,17 @@ export function parse_polygon(data) {
   const pt_list = data.slice(6);
 
   // put every 3 item in a separate array
-  var vertices = [];
+  let vertices = [];
   while (pt_list.length > 0)
-      vertices.push(pt_list.splice(0, 3));
+     vertices.push(pt_list.splice(0, 3));
+
+  let xyz = vertices.map(item => create_xyz(item));
 
   const polygon = {
     'modifier': data[0],
     'type': data[1],
     'name': data[2],
-    'vertices': vertices
+    'vertices': xyz
   };
   return ['surfaces', polygon];
 }
