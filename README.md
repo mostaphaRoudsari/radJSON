@@ -1,4 +1,4 @@
-# rad-to-json
+# radJSON
 A JS library to parse RADIANCE input files into JSON.
 
 This library can be used to convert radiance files to JSON format. The standard JSON schema is put together as a need for [Honeybee[+]]() library. There is no claim that this is the correct JSON schema for Radiance primitives but we need one to get started!
@@ -14,18 +14,18 @@ The output JSON object is structured as:
 ```
 
 
-You can see it in action [here](https://www.mostapha.io/rad-to-json/)!
+You can see it in action [here](https://www.mostapha.io/radJSON/)!
 
 The current goal of the project is to provide easy to read input files for [RAD to Three.js viewer](https://github.com/ladybug-tools/spider/tree/master/cookbook/rad-to-threejs) which is an on-going project developed by [Theo](https://github.com/theo-armour).
 
 
-# RadJSON
+# radJSON
 
-Here is an overview of `RadJSON` schema.
+Here is an overview of `radJSON` schema.
 
 ## Generic
 
-This schema will be used for any primitives that are not currently supported by *rad-to-json*. See [this page](http://radsite.lbl.gov/radiance/refer/ray.html#Primitive) for the list of all radiance primitive types.
+This schema will be used for any primitives that are not currently supported by *radJSON*. See [this page](http://radsite.lbl.gov/radiance/refer/ray.html#Primitive) for the list of all radiance primitive types.
 
 `Radiance`
 ```
@@ -35,7 +35,7 @@ n S1 S2 "S 3" .. Sn
 m R1 R2 R3 .. Rm
 ```
 
-`RadJSON`
+`radJSON`
 ```javascript
 {
     "modifier": string,
@@ -68,7 +68,7 @@ mod polygon id
         xn      yn      zn
 ```
 
-`RadJSON`
+`radJSON`
 ```javascript
 {
     "modifier": string,
@@ -96,7 +96,7 @@ mod sphere id
 4 xcent ycent zcent radius
 ```
 
-`RadJSON`
+`radJSON`
 ```javascript
 {
     "modifier": string,
@@ -125,7 +125,7 @@ mod cone id
         r0      r1
 ```
 
-`RadJSON`
+`radJSON`
 ```javascript
 {
   "type": "cone",
@@ -153,7 +153,7 @@ mod cylinder id
        x1      y1      z1
        rad
 ```
-`RadJSON`
+`radJSON`
 ```javascript
 {
     "type": "cylinder",
@@ -178,7 +178,7 @@ mod plastic id
 0
 5 red green blue spec rough
 ```
-`RadJSON`
+`radJSON`
 ```javascript
 {
   "modifier": string, // material modifier (Default: "void")
@@ -202,7 +202,7 @@ mod glass id
 0
 3 rtn gtn btn
 ```
-`RadJSON`
+`radJSON`
 ```javascript
 {
   "modifier": string, // material modifier (Default: "void")
@@ -226,7 +226,7 @@ mod metal id
 0
 5 red green blue spec rough
 ```
-`RadJSON`
+`radJSON`
 ```javascript
 {
   "modifier": string, // material modifier (Default: "void")
@@ -250,7 +250,7 @@ mod trans id
 0
 7 red green blue spec rough trans tspec
 ```
-`RadJSON`
+`radJSON`
 ```javascript
 {
   "modifier": string, // material modifier (Default: "void")
@@ -276,7 +276,7 @@ mod glow id
 0
 4 red green blue maxrad
 ```
-`RadJSON`
+`radJSON`
 ```javascript
 {
   "modifier": string, // material modifier (Default: "void")
@@ -299,7 +299,7 @@ mod mirror id
 0
 3 red green blue
 ```
-`RadJSON`
+`radJSON`
 ```javascript
 {
   "modifier": string, // material modifier (Default: "void")

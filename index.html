@@ -6,10 +6,13 @@
       height: 250px;
     }
   </style>
+  <head>
+    <title>radJSON</title>
+  </head>
   <body>
 
     <div>
-      <a href="https://github.com/mostaphaRoudsari/rad-to-json" target="_blank">
+      <a href="https://github.com/mostaphaRoudsari/radJSON" target="_blank">
         <img src="https://status.github.com/images/invertocat.png"  width="30" height="30"
         title="See source code!"/>
       </a>
@@ -19,7 +22,7 @@
     <div>
       <br />
       <a href="https://github.com/ladybug-tools/spider/tree/master/cookbook/rad-to-threejs"
-        target="_blank">Use RadJSON viewer to see the geometry in 3D.
+        target="_blank">Use RAD viewer to see the geometry in 3D.
       </a>
     </div>
     <br />
@@ -32,7 +35,7 @@
     <textarea id="other-target"></textarea>
 
     <script type="module">
-      import {rad_parser} from './rad2json.js'
+      import {rad_parser} from './lib/rad2json.js'
       // bind input button to rad_parser
       document.getElementById('input-file').addEventListener('change', rad_parser);
     </script>
