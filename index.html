@@ -3,18 +3,33 @@
   <style>
     textarea {
       width: 900px;
-      height: 500px;
+      height: 250px;
     }
   </style>
   <body>
 
     <div>
-      <label for="input-file">Specify a rad file </label>
+      <a href="https://github.com/mostaphaRoudsari/rad-to-json" target="_blank">
+        <img src="https://status.github.com/images/invertocat.png"  width="30" height="30"
+        title="See source code!"/>
+      </a>
+      <label for="input-file">Specify one or multiple rad files </label>
       <input type="file" name="file[]" id="input-file" multiple="" accept=".rad,.mat">
+    </div>
+    <div>
+      <br />
+      <a href="https://github.com/ladybug-tools/spider/tree/master/cookbook/rad-to-threejs"
+        target="_blank">Use RadJSON viewer to see the geometry in 3D.
+      </a>
     </div>
     <br />
 
-    <textarea id="content-target"></textarea>
+    <div>Surfaces</div>
+    <textarea id="surface-target"></textarea>
+    <div>Materials</div>
+    <textarea id="material-target"></textarea>
+    <div>Other</div>
+    <textarea id="other-target"></textarea>
 
     <script type="module">
       import {rad_parser} from './rad2json.js'

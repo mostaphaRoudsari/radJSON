@@ -1,4 +1,6 @@
 // parse radiance files and return a JSON object
+import * as converter from '/radconverter.js';
+
 function rad_parser(event) {
   if (!event) return;
   // parse file
@@ -44,7 +46,18 @@ function rad_to_json(rad_text) {
   // separate input radiance objects
   var raw_objects = rad_text.match(parse_rad_re)
     .filter(word => word.trim().length > 0 && !word.trim().startsWith('#'));
-  var json_array = raw_objects.map(line => rad_object_to_json(line));
+  // extra round of removing next line! The code works fine without this locally but
+  // not on the page. I'm not sure why.
+  const raw_objects_re = raw_objects.map( item => item.replace(/\r\n|\n/g, " " ) );
+
+  let json_data = raw_objects.map(line => rad_object_to_json(line));
+
+  let json_array = {'surfaces': [], 'materials': [], 'other': []};
+
+  for (var i = 0; i < json_data.length; i++) {
+    let results = json_data[i];
+    json_array[results[0]].push(results[1]);
+  }
   return json_array;
 }
 
@@ -54,65 +67,44 @@ function rad_object_to_json(rad_text){
   const data = rad_text.replace(rep_new_line_re, " ").trim().split(" ");
   const type = data[1];
   if (!type) return;
-  if (type != 'polygon') {
-    // this is a generic method that returns the data as values for each line
-    return parse_base(data);
-  } else {
-    // for now we only support polygons
-    return parse_polygon(data);
+  switch (type) {
+    case 'polygon':
+      return converter.parse_polygon(data);
+    case 'sphere':
+      return converter.parse_sphere(data);
+    case 'cone':
+      return converter.parse_cone(data);
+    case 'cylinder':
+      return converter.parse_cylinder(data);
+    case 'plastic':
+      return converter.parse_plastic(data);
+    case 'glass':
+      return converter.parse_glass(data);
+    case 'metal':
+      return converter.parse_metal(data);
+    case 'trans':
+      return converter.parse_trans(data);
+    case 'glow':
+      return converter.parse_glow(data);
+    case 'mirror':
+      return converter.parse_mirror(data);
+    default:
+      // this is a generic method that returns the data as values for each line
+      return converter.parse_base(data);
   }
-}
-
-function parse_polygon(data) {
-  /* convert a polygon line to a JSON object */
-  // separate x, y, z coordinates
-  const pt_list = data.slice(6);
-
-  // put every 3 item in a separate array
-  var vertices = [];
-  while (pt_list.length > 0)
-      vertices.push(pt_list.splice(0, 3));
-
-  const polygon = {
-    'modifier': data[0],
-    'type': data[1],
-    'name': data[2],
-    'vertices': vertices
-  };
-  return polygon;
-}
-
-function parse_base(data) {
-  /* convert a radiance primitive line to a JSON object */
-  // find number of items in each line
-  const base_data = data.slice(3);
-
-  const count_1 = parseInt(base_data[0]);
-  const count_2 = parseInt(base_data[count_1 + 1]);
-  const count_3 = parseInt(base_data[count_1 + count_2 + 2]);
-
-  const l1 = (count_1 == 0) ? [] : base_data.slice(1, count_1 + 1);
-  const l2 = (count_2 == 0) ? [] : base_data.slice(count_1 + 2, count_1 + count_2 + 2);
-  const l3 = (count_3 == 0) ? [] : base_data.slice(count_1 + count_2 + 3,
-    count_1 + count_2 + count_3 + 3);
-
-  const values = {0: l1, 1: l2, 2: l3}
-
-  const rad_object = {
-    'modifier': data[0],
-    'type': data[1],
-    'name': data[2],
-    'values': values
-  };
-
-  return rad_object;
 }
 
 function place_file_content(data) {
   /* place content in text box */
-  let target = document.getElementById('content-target');
-  let content = data.map(obj => JSON.stringify(obj, undefined, 2));
-  target.value = content;
+  let srf_target = document.getElementById('surface-target');
+  let srf_content = data['surfaces'].map(obj => JSON.stringify(obj, undefined, 2));
+  srf_target.value = srf_content;
+  let mat_target = document.getElementById('material-target');
+  let mat_content = data['materials'].map(obj => JSON.stringify(obj, undefined, 2));
+  mat_target.value = mat_content;
+  let other_target = document.getElementById('other-target');
+  let other_content = data['other'].map(obj => JSON.stringify(obj, undefined, 2));
+  other_target.value = other_content;
 }
 
 export { rad_parser };
