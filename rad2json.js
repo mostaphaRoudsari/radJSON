@@ -1,5 +1,5 @@
 // parse radiance files and return a JSON object
-import * as converter from '/radconverter.js';
+import * as converter from './radconverter.js';
 
 function rad_parser(event) {
   if (!event) return;
